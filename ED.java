@@ -25,7 +25,7 @@ public class ED extends JFrame {
 	
 	}
 	public void southPanel() {
-		JPanel south = new JPanel();							//创建南边的Panel
+		JPanel south = new JPanel();			//创建南边的Panel
 		jiami = new JButton("加 密");
 		jiemi = new JButton("解 密");
 		south.add(jiami);
