@@ -6,6 +6,9 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
 
 
 
@@ -22,11 +25,48 @@ public class ED extends JFrame {
 		southPanel();
 		centerPanel();
 		northPanel();
+		event();
 
 	
 	}
+	public void event() {
+		jiami.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent e) {
+				jiami();
+				
+
+			}
+
+		});
+		jiemi.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent e) {
+				jiemi();
+				
+
+			}
+
+		});
+		
+	}
+	private void jiami() {
+			String message = input.getText();	//获取输入区的内容
+			//int kkey = key1.getText();
+			//int zkey = key2.getText();
+
+			output.setText(message);		//放message测试
+
+		}
+		private void jiemi() {
+			String message = input.getText();	//获取输入区的内容
+			//int kkey = key1.getText();
+			//int zkey = key2.getText();
+
+			output.setText(message);
+
+		}
+
 	public void southPanel() {
-		JPanel south = new JPanel();							//创建南边的Panel
+		JPanel south = new JPanel();			//创建南边的Panel
 		jiami = new JButton("加 密");
 		jiemi = new JButton("解 密");
 		clear = new JButton("清 屏");
@@ -53,13 +93,12 @@ public class ED extends JFrame {
 		output.setFont(new Font("1",Font.PLAIN,13));
 		output.setEditable(false);
 
-		JPanel panelnorth = new JPanel();					// 画板采用边界布局管理器
+		JPanel panelnorth = new JPanel();		// 画板采用边界布局管理器
         panelnorth.setLayout(new BorderLayout());
         panelnorth.add("North", north1);
         panelnorth.add("Center", north2);
 		this.add(panelnorth,BorderLayout.NORTH);
 		
-
 	}
 	public void centerPanel() {
 		JPanel center = new JPanel();
