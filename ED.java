@@ -53,7 +53,7 @@ public class ED extends JFrame {
 			//int kkey = key1.getText();
 			//int zkey = key2.getText();
 
-			output.setText(message);		//放message测试
+			output.setText(message);		//放message做测试
 
 		}
 		private void jiemi() {
