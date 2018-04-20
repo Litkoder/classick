@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.io.IOException;
+import java.net.UnknownHostException;
 
 
 public class ED extends JFrame {
@@ -33,15 +35,22 @@ public class ED extends JFrame {
 	public void event() {
 		jiami.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
-				jiami();
-				
-
+				try {
+					jiami();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			
 			}
 
 		});
 		jiemi.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
-				jiemi();
+				try {
+					jiemi();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
 
 			}
@@ -49,7 +58,7 @@ public class ED extends JFrame {
 		});
 		
 	}
-	private void jiami() {
+	private void jiami() throws IOException {
 			String message = input.getText();			//获取输入区的内容
 			String mykey1=key1.getText();				//获取key1的内容
 			String mykey2=key2.getText();				//获取key2的内容
@@ -74,10 +83,10 @@ public class ED extends JFrame {
 				}
 				
 			}
-			output.setText(message);				//放message测试
+			output.setText(message);							//放message测试
 
 		}
-		private void jiemi() {
+		private void jiemi() throws IOException {
 			String message = input.getText();			//获取输入区的内容
 			String mykey1=key1.getText();				//获取key1的内容
 			String mykey2=key2.getText();				//获取key2的内容
@@ -103,19 +112,19 @@ public class ED extends JFrame {
 				
 			}
 
-			output.setText(message);				//放message测试
+			output.setText(message);							//放message测试
 
 		}
 
 	public void southPanel() {
-		JPanel south = new JPanel();					//创建南边的Panel
+		JPanel south = new JPanel();							//创建南边的Panel
 		jiami = new JButton("加 密");
 		jiemi = new JButton("解 密");
 		clear = new JButton("清 屏");
 		south.add(jiami);
 		south.add(jiemi);
 		south.add(clear);
-		this.add(south,BorderLayout.SOUTH);				//将Panel放在Frame的南边
+		this.add(south,BorderLayout.SOUTH);		//将Panel放在Frame的南边
 	}
 	public void northPanel() {
 		JPanel north1 = new JPanel();
@@ -135,7 +144,7 @@ public class ED extends JFrame {
 		output.setFont(new Font("1",Font.PLAIN,13));
 		output.setEditable(false);
 
-		JPanel panelnorth = new JPanel();				// 画板采用边界布局管理器
+		JPanel panelnorth = new JPanel();					// 画板采用边界布局管理器
         panelnorth.setLayout(new BorderLayout());
         panelnorth.add("North", north1);
         panelnorth.add("Center", north2);
