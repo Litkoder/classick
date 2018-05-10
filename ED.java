@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+//import java.awt.event.WindowAdapter;
 import java.io.IOException;
 
 
@@ -23,8 +24,8 @@ public class ED extends JFrame {
 	private JTextArea output;
 	private JTextField key1;
 	private JTextField key2;
-	private JButton jiami;
-	private JButton jiemi;
+	private JButton encrypt;
+	private JButton decrypt;
 	private JButton clear;
 	
 	public ED() {
@@ -34,21 +35,23 @@ public class ED extends JFrame {
 		northPanel();
 		event();
 	}
-
+	/*
+	 * 设置动作监听器
+	 */
 	public void event() {
-		jiami.addActionListener(new ActionListener () {
+		encrypt.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					jiami();
+					encrypt();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}			
 			}
 		});
-		jiemi.addActionListener(new ActionListener () {
+		decrypt.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					jiemi();
+					decrypt();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}				
@@ -56,7 +59,7 @@ public class ED extends JFrame {
 		});		
 	}
 
-	private void jiami() throws IOException {
+	private void encrypt() throws IOException {
 		String message = input.getText();					//获取输入区的内容
 		String mykey1=key1.getText();						//获取key1的内容
 		String mykey2=key2.getText();						//获取key2的内容
@@ -73,7 +76,7 @@ public class ED extends JFrame {
 				caesarEncrypt(message,mykey1);							
 			} else if((mykey1 == null || mykey1.equals("")) && mykey2 != null) {
 				JOptionPane.showMessageDialog(null, "测试2!");
-				fenceEncryption(message,mykey2);					
+				fenceEncrypt(message,mykey2);					
 			} else {
 				JOptionPane.showMessageDialog(null, "密钥只能同时输入一个!");
 				key1.requestFocus();
@@ -81,7 +84,7 @@ public class ED extends JFrame {
 		}
 	}
 
-	private void jiemi() throws IOException {
+	private void decrypt() throws IOException {
 		String message = input.getText();					//获取输入区的内容
 		String mykey1=key1.getText();						//获取key1的内容
 		String mykey2=key2.getText();						//获取key2的内容
@@ -109,10 +112,10 @@ public class ED extends JFrame {
 	/*
 	 * 凯撒密码加密部分
 	 */
-	public String caesarEncrypt(String str, String key) {
-		StringBuilder result = new StringBuilder();
+	public String caesarEncrypt(String plainText, String key) {
+		StringBuilder cipherText = new StringBuilder();
 		int k = Integer.parseInt(key);
-		for (char c : str.toCharArray()) {					//将字符串对象中的字符转换为一个字符数组
+		for (char c : plainText.toCharArray()) {			//将字符串对象中的字符转换为一个字符数组
 			if (c >= 'a' && c <= 'z') {						// 如果字符串中的某个字符是小写字母
 				c += k % 26;								// 移动key%26位
 					if (c < 'a')
@@ -127,19 +130,19 @@ public class ED extends JFrame {
 				if (c > 'Z')
 					c -= 26;
 			}
-			result.append(c);
+			cipherText.append(c);
 		}
-		output.setText(result.toString());
-		return result.toString();	
+		output.setText(cipherText.toString());
+		return cipherText.toString();	
 	}
 	/*
 	 * 凯撒密码解密部分
 	 */
-	public String caesarDecrypt(String str, String key) {
-		StringBuilder result = new StringBuilder();
+	public String caesarDecrypt(String cipherText, String key) {
+		StringBuilder plainText = new StringBuilder();
 		int k = Integer.parseInt(key);
 		k = 0 - k;
-		for (char c : str.toCharArray()) {					//将字符串对象中的字符转换为一个字符数组
+		for (char c : cipherText.toCharArray()) {					//将字符串对象中的字符转换为一个字符数组
 			if (c >= 'a' && c <= 'z') {						// 如果字符串中的某个字符是小写字母
 				c += k % 26;								// 移动key%26位
 					if (c < 'a') {
@@ -158,62 +161,111 @@ public class ED extends JFrame {
 					c -= 26;
 				}
 			}
-			result.append(c);
+			plainText.append(c);
 		}
-		output.setText(result.toString());
-		return result.toString();
+		output.setText(plainText.toString());
+		return plainText.toString();
 	}
 	/*
 	 * 栅栏密码加密部分
 	 */
-	public String fenceEncryption(String str, String key){
-        String p = new String();
-        String p1 = new String();
-        String p2 = new String();
-        int k = Integer.parseInt(key);
-        for    (int i = 0; i < str.length(); i++){
-            if(i%k == 0){
-                p1 += p.valueOf(str.charAt(i));					//charAt(i)就是字符串从左向右数的第i个字符
-            }
-            else{
-                p2 += p.valueOf(str.charAt(i)); 
-            }
-        }
-        output.setText((p1+p2).toString());
-        return p1+p2;
-    }
+	
+	/*
+	 * 有问题
+	public String fenceEncrypt(String str, String key) {
+		String ciphertext = "";
+		int k = Integer.parseInt(key);
+		String[] lines = new String[50];
+		for(int i = 0; i < 50; i++) {
+			lines[i] = "";
+		}
+		int d = 0;
+		int p = str.length()/k;
+		int q = 1;
+		for(int i = 0; i < str.length(); i++) {
+			if(str.length() % k == 0){
+				lines[d] += str.charAt(i);					//charAt(i)就是字符串从左向右数的第i个字符
+				d += p;
+				if(d > str.length() && q < p) {
+					d = q++;
+				}
+			} else {
+				lines[d] += str.charAt(i);
+				d += (p+1);
+				if(d > str.length() && q < p+1) {
+					d = q++;
+				}
+			}					
+		}
+		for(String l : lines) {
+			ciphertext = ciphertext + l;
+		}
+		output.setText((ciphertext).toString());
+		return ciphertext;
+	}
+	*/
+	public String fenceEncrypt(String plainText, String key) {
+		int k = Integer.parseInt(key);
+		int r = k;
+		int len = plainText.length();
+		int c = len / k;
+		char mat[][] = new char[r][c];
+		int p = 0;  
+		String cipherText = "";
+		for(int i = 0; i < c; i++) {
+			for(int j = 0; j < r; j++) {
+				if(p!=len) {
+					mat[j][i] = plainText.charAt(p++);
+				} else {
+					mat[j][i] = 'X';
+				}
+			}
+		}
+		for(int i = 0; i < r; i++) {
+			for(int j = 0; j < c; j++) {
+				cipherText += mat[i][j];
+			}
+		}
+		output.setText(cipherText);
+		return cipherText;
+	}
 	/*
 	 * 栅栏密码解密部分
 	 */
-	public String fenceDecrypt(String str, String key){
-        String result = new String();
-        String p = new String();
-        int k = Integer.parseInt(key);
-        String p1 = str.substring(0,str.length()/k);
-        String p2 = str.substring(str.length()/k);       
-        int i;
-        for(i = 0; i < p1.length(); i++){
-            result += p.valueOf(p1.charAt(i)) + p.valueOf(p2.charAt(i));
-        }
-        if(str.length()%k != 0){
-        	result += p.valueOf(p2.charAt(i));
-        }
-        output.setText(result.toString());
-        return result;
-    }
+	String fenceDecrypt(String cipherText, String key) {
+		int k = Integer.parseInt(key);
+		int r=k,len=cipherText.length();
+		int c=len/k;
+		char mat[][]=new char[r][c];
+		int p=0;
+		String plainText="";
+		for(int i=0;i< r;i++) {
+			for(int j=0;j< c;j++) {
+				mat[i][j]=cipherText.charAt(p++);
+			}
+		}
+		for(int i=0;i< c;i++) {
+			for(int j=0;j< r;j++) {
+				plainText+=mat[j][i];
+			}
+		}
+		output.setText(plainText);
+		return plainText;
+	}
+
 	/*
 	 * 创建南边的Panel
 	 * 用来显示"加密"、"解密"、"清屏"的按钮
 	 */
 	public void southPanel() {
 		JPanel south = new JPanel();							
-		jiami = new JButton("加 密");
-		jiemi = new JButton("解 密");
+		encrypt = new JButton("加 密");
+		decrypt = new JButton("解 密");
 		clear = new JButton("清 屏");
-		south.add(jiami);
-		south.add(jiemi);
+		south.add(encrypt);
+		south.add(decrypt);
 		south.add(clear);
-		this.add(south,BorderLayout.SOUTH);						//将Panel放在Frame的南边
+		this.add(south,BorderLayout.SOUTH);					//将Panel放在Frame的南边
 	}
 	/*
 	 * 创建北边的Panel
@@ -237,11 +289,11 @@ public class ED extends JFrame {
 		output.setFont(new Font("1",Font.PLAIN,13));
 		output.setEditable(false);
 
-		JPanel panelnorth = new JPanel();						// 画板采用边界布局管理器
-        panelnorth.setLayout(new BorderLayout());
+		JPanel panelnorth = new JPanel();					
+        panelnorth.setLayout(new BorderLayout());			//采用边界布局管理器
         panelnorth.add("North", north1);
         panelnorth.add("Center", north2);
-		this.add(panelnorth,BorderLayout.NORTH);	
+		this.add(panelnorth,BorderLayout.NORTH);			//将Panel放在Frame的北边
 	}
 	/*
 	 * 中间的panel
@@ -261,7 +313,7 @@ public class ED extends JFrame {
 		key1.setFont(new Font("1",Font.PLAIN,13));
 		fence.setFont(new Font("1",Font.PLAIN,13));
 		key2.setFont(new Font("1",Font.PLAIN,13));
-		this.add(center,BorderLayout.CENTER);
+		this.add(center,BorderLayout.CENTER);				//将Panel放在Frame的中间
 	}
 	/*
 	 * 初始化窗体
@@ -271,10 +323,8 @@ public class ED extends JFrame {
 		this.setSize(600,400);
 		this.setVisible(true);
 	}
-
-
+	
 	public static void main(String[] args) {
 		new ED();
 	}
 }
-
