@@ -11,14 +11,9 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-//import java.awt.event.WindowAdapter;
 import java.io.IOException;
 
-
 public class ED extends JFrame {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTextArea input;
 	private JTextArea output;
@@ -36,7 +31,8 @@ public class ED extends JFrame {
 		event();
 	}
 	/*
-	 * 设置动作监听器
+	 * 设置监听器
+	 * 监听"加密","解密","清屏"按钮
 	 */
 	public void event() {
 		encrypt.addActionListener(new ActionListener () {
@@ -56,9 +52,23 @@ public class ED extends JFrame {
 					e1.printStackTrace();
 				}				
 			}
-		});		
+		});	
+		/*
+		 * 设置清屏功能
+		 */
+		clear.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent e) {
+				input.setText("");	
+				output.setText("");
+				key1.setText("");
+				key2.setText("");
+			}
+		});
 	}
-
+	
+	/*
+	 * 设置加密按钮
+	 */
 	private void encrypt() throws IOException {
 		String message = input.getText();					//获取输入区的内容
 		String mykey1=key1.getText();						//获取key1的内容
@@ -83,7 +93,9 @@ public class ED extends JFrame {
 			}			
 		}
 	}
-
+	/*
+	 * 设置解密按钮
+	 */
 	private void decrypt() throws IOException {
 		String message = input.getText();					//获取输入区的内容
 		String mykey1=key1.getText();						//获取key1的内容
@@ -109,6 +121,7 @@ public class ED extends JFrame {
 			}			
 		}
 	}
+	
 	/*
 	 * 凯撒密码加密部分
 	 */
@@ -166,44 +179,10 @@ public class ED extends JFrame {
 		output.setText(plainText.toString());
 		return plainText.toString();
 	}
+	
 	/*
 	 * 栅栏密码加密部分
 	 */
-	
-	/*
-	 * 有问题
-	public String fenceEncrypt(String str, String key) {
-		String ciphertext = "";
-		int k = Integer.parseInt(key);
-		String[] lines = new String[50];
-		for(int i = 0; i < 50; i++) {
-			lines[i] = "";
-		}
-		int d = 0;
-		int p = str.length()/k;
-		int q = 1;
-		for(int i = 0; i < str.length(); i++) {
-			if(str.length() % k == 0){
-				lines[d] += str.charAt(i);					//charAt(i)就是字符串从左向右数的第i个字符
-				d += p;
-				if(d > str.length() && q < p) {
-					d = q++;
-				}
-			} else {
-				lines[d] += str.charAt(i);
-				d += (p+1);
-				if(d > str.length() && q < p+1) {
-					d = q++;
-				}
-			}					
-		}
-		for(String l : lines) {
-			ciphertext = ciphertext + l;
-		}
-		output.setText((ciphertext).toString());
-		return ciphertext;
-	}
-	*/
 	public String fenceEncrypt(String plainText, String key) {
 		int k = Integer.parseInt(key);
 		int r = k;
@@ -234,19 +213,20 @@ public class ED extends JFrame {
 	 */
 	String fenceDecrypt(String cipherText, String key) {
 		int k = Integer.parseInt(key);
-		int r=k,len=cipherText.length();
-		int c=len/k;
-		char mat[][]=new char[r][c];
-		int p=0;
-		String plainText="";
-		for(int i=0;i< r;i++) {
-			for(int j=0;j< c;j++) {
-				mat[i][j]=cipherText.charAt(p++);
+		int r = k;
+		int len = cipherText.length();
+		int c = len / k;
+		char mat[][] = new char[r][c];
+		int p = 0;
+		String plainText = "";
+		for(int i = 0; i < r; i++) {
+			for(int j = 0; j < c; j++) {
+				mat[i][j] = cipherText.charAt(p++);
 			}
 		}
-		for(int i=0;i< c;i++) {
-			for(int j=0;j< r;j++) {
-				plainText+=mat[j][i];
+		for(int i = 0; i < c; i++) {
+			for(int j = 0; j < r; j++) {
+				plainText += mat[j][i];
 			}
 		}
 		output.setText(plainText);
@@ -296,7 +276,7 @@ public class ED extends JFrame {
 		this.add(panelnorth,BorderLayout.NORTH);			//将Panel放在Frame的北边
 	}
 	/*
-	 * 中间的panel
+	 * 创建中间的panel
 	 * 用来显示"凯撒密码密钥"和"栅栏密码密钥"的输入框
 	 */
 	public void centerPanel() {
